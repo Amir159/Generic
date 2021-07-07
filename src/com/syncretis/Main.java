@@ -1,14 +1,13 @@
 package com.syncretis;
 
-import com.syncretis.container.ProductContainer;
-import com.syncretis.container.RecyclableMaterialContainer;
+import com.syncretis.container.*;
 import com.syncretis.distributor.Distributor;
-import com.syncretis.material.Glass;
-import com.syncretis.material.Material;
-import com.syncretis.material.Paper;
-import com.syncretis.material.Plastic;
+import com.syncretis.handlers.*;
+import com.syncretis.material.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
 
@@ -26,7 +25,12 @@ public class Main {
             System.out.println(recyclableMaterialContainer.getType() + " Weight = " + recyclableMaterialContainer.getMass());
         }
 
-        Distributor distributor = new Distributor();
+        Map<Class<? extends Material>, Handler<? extends Material>> handlerMap = new HashMap<>();
+        handlerMap.put(Glass.class, new GlassHandler());
+        handlerMap.put(Paper.class, new PaperHandler());
+        handlerMap.put(Plastic.class, new PlasticHandler());
+
+        Distributor distributor = new Distributor(handlerMap);
         ArrayList<ProductContainer<? extends Material>> newArr = distributor.distribute(arr);
 
         for (ProductContainer<? extends Material> product : newArr) {
